@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
             return Date.now()
         }
     },
-    userTypes: {
+    userType: {
         type: String,
         required: true,
         default: "CUSTOMER"
