@@ -14,6 +14,7 @@ db.on('error', () => { console.log("Error while connecting to DB") })
 db.once('open', () => { console.log("Connected to DB") })
 
 require('./routes/auth.route')(app)
+require('./routes/user.route')(app)
 
 app.listen(serverConfig.PORT, () => {
     console.log('Server is flying on PORT', serverConfig.PORT)
