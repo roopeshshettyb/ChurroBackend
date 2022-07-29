@@ -17,9 +17,25 @@ const isAdmin = async (req, res, next) => {
     const user = await User.findOne({ userId: req.userId })
 
     if (user && user.userType === constants.userTypes.admin) next();
-    return res.status(403).send({ message: "Unauthorized, only Admins can access" })
+    else return res.status(403).send({ message: "Unauthorized, only Admins can access" })
+}
+
+const isValidUserIdInReqParam = async (req, res, next) => {
+    try {
+        const user = await User.find({ userId: req.params.id })
+        if (!user) return res.status(400).send({ message: "User does not exist" })
+        next()
+    } catch (err) { console.log("Error in isValidUserIdInReqParam", err); return res.status(500).send({ message: "Internal server error" }) }
+}
+
+const isAdminOrOwner = async (req, res, next) => {
+    try {
+        const callingUser = await User.findOne({ userId: req.userId })
+        if (callingUser.userType === constants.userTypes.admin || callingUser.userId === req.params.id) { next() }
+        else return res.status(401).send({ message: "Unauthorized" })
+    } catch (err) { console.log("Error in isAdminOrOwner", err); return res.status(500).send({ message: "Internal server error" }) }
 }
 
 module.exports = {
-    verifyToken, isAdmin
+    verifyToken, isAdmin, isValidUserIdInReqParam, isAdminOrOwner
 }

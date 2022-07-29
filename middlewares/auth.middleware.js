@@ -5,7 +5,7 @@ const isValidEmail = (email) => {
     return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 }
 
-validateSignUp = async (req, res, next) => {
+const validateSignUp = async (req, res, next) => {
 
     if (!req.body.name) return res.status(400).send({ message: "User name is not provided" })
     if (!req.body.userId) return res.status(400).send({ message: "User ID was not provided" })
@@ -25,7 +25,7 @@ validateSignUp = async (req, res, next) => {
     next()
 }
 
-validateSignIn = async (req, res, next) => {
+const validateSignIn = async (req, res, next) => {
 
     if (!req.body.userId) return res.status(400).send({ message: "User ID was not provided" })
     try {
