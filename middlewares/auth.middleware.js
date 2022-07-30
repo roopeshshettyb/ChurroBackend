@@ -1,4 +1,5 @@
 const User = require('../models/user.model')
+const constants = require('../utils/constants')
 const Constants = require("../utils/constants")
 
 const isValidEmail = (email) => {
@@ -31,6 +32,7 @@ const validateSignIn = async (req, res, next) => {
     try {
         const user = await User.findOne({ userId: req.body.userId })
         if (user === null) return res.status(400).send({ message: "User does not exist" })
+        if (user.userStatus === constants.userStatus.pending) return res.status(400).send({ message: "User is not approved" })
     } catch (err) { return res.status(500).send({ message: "Internal Server Error" }) }
     if (!req.body.password) return res.status(400).send({ message: "Password was not provided" })
 
