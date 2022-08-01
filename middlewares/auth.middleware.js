@@ -1,5 +1,4 @@
 const User = require('../models/user.model')
-const constants = require('../utils/constants')
 const Constants = require("../utils/constants")
 
 const isValidEmail = (email) => {

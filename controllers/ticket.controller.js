@@ -27,8 +27,21 @@ exports.getTickets = async (req, res) => {
         tickets.createdTickets = await Ticket.find({ "_id": { $in: createdIds } })
         if (user.userType === constants.userTypes.engineer) {
             var assignedIds = user.assignedTickets
-            tickets.assignedTickets = await Ticket.find({ _id: { $in: assignedIds } })
+            tickets.assignedTickets = await Ticket.find({ "_id": { $in: assignedIds } })
         }
         return res.status(200).json(tickets)
     } catch (err) { console.log("Error in getTickets", err.message); return res.status(500).send({ message: "Internal server error" }) }
+}
+
+exports.updateTicket = async (req, res) => {
+    try {
+        const ticket = await Ticket.findOne({ _id: req.params.id })
+        ticket.title = req.body.title ? req.body.title : ticket.title
+        ticket.ticketPriority = req.body.ticketPriority ? req.body.ticketPriority : ticket.ticketPriority
+        ticket.description = req.body.description ? req.body.description : ticket.description
+        ticket.status = req.body.status ? req.body.status : ticket.status
+        ticket.assignee = req.body.assignee ? req.body.assignee : ticket.assignee
+        const updatedTicket = await ticket.save()
+        return res.status(200).json((updatedTicket));
+    } catch (err) { console.log("Error in updateTicket", err.message); return res.status(500).send({ message: "Internal server error" }) }
 }
