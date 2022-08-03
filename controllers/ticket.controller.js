@@ -1,6 +1,7 @@
 const Ticket = require('../models/ticket.model')
 const User = require('../models/user.model')
 const constants = require('../utils/constants')
+const sendNotificationReq = require("../utils/notificationClient");
 
 exports.createTicket = async (req, res) => {
     const { title, ticketPriority, description, status } = req.body
@@ -9,11 +10,13 @@ exports.createTicket = async (req, res) => {
     try {
         const engineer = await User.findOne({ userType: constants.userTypes.engineer, userStatus: constants.userStatus.approved })
         if (engineer !== null) ticketObj.assignee = engineer.userId;
+        else return res.status(500).send({ message: "No Engineers Available" });
         const createdTicket = await Ticket.create(ticketObj)
         if (createdTicket) {
             const customer = await User.findOne({ userId: req.userId })
             customer.createdTickets.push(createdTicket); await customer.save()
             engineer.assignedTickets.push(createdTicket); await engineer.save()
+            sendNotificationReq(`Ticket created with id : ${createdTicket._id}`, "Ticket has been created", `${customer.email},${engineer.email}`, "CRM APP");
             return res.status(201).send(createdTicket)
         }
     } catch (err) { console.log("Error in createTicket", err.message); return res.status(500).send({ message: "Internal server error" }) }

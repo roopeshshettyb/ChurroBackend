@@ -23,7 +23,8 @@ async function init() {
             userType: "ADMIN",
             userStatus: "APPROVED"
         });
-        console.log(user)
+        // console.log(user)
+        // await User.deleteMany()
     } catch (err) { console.log(err) }
 }
 // init()
