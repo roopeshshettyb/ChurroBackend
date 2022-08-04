@@ -3,7 +3,7 @@ const { createTicket, getTickets, updateTicket } = require("../controllers/ticke
 const mw = require('../middlewares')
 
 module.exports = (app) => {
-    app.post('/crm/api/v1/ticket/create', auth.verifyToken, createTicket)
+    app.post('/crm/api/v1/ticket/create', auth.verifyToken, mw.ticket.validateCreateTicketBody, createTicket)
     app.get('/crm/api/v1/ticket', auth.verifyToken, getTickets)
-    app.put('/crm/api/v1/ticket/:id', auth.verifyToken, mw.ticket.isAdminOrOwnerOrEngineerOfTicket, updateTicket)
+    app.put('/crm/api/v1/ticket/:id', auth.verifyToken, mw.ticket.isAdminOrOwnerOrEngineerOfTicket, mw.ticket.validateUpdateTicketReq, updateTicket)
 }

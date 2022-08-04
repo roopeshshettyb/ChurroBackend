@@ -8,7 +8,10 @@ exports.createTicket = async (req, res) => {
     const reporter = req.userId
     const ticketObj = { title, ticketPriority, description, status, reporter }
     try {
-        const engineer = await User.findOne({ userType: constants.userTypes.engineer, userStatus: constants.userStatus.approved })
+        const response = await User.find({ userType: constants.userTypes.engineer, userStatus: constants.userStatus.approved })
+        const engineer = response.reduce(function (prev, current) {
+            return (prev.assignedTickets.length < current.assignedTickets.length) ? prev : current
+        })
         if (engineer !== null) ticketObj.assignee = engineer.userId;
         else return res.status(500).send({ message: "No Engineers Available" });
         const createdTicket = await Ticket.create(ticketObj)

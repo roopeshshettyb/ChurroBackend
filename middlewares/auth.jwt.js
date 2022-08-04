@@ -31,6 +31,7 @@ const isValidUserIdInReqParam = async (req, res, next) => {
 const isAdminOrOwner = async (req, res, next) => {
     try {
         const callingUser = await User.findOne({ userId: req.userId })
+        if (!callingUser) return res.status(404).send({ message: "User does not exist" })
         if (callingUser.userType === constants.userTypes.admin || callingUser.userId === req.params.id) { next() }
         else return res.status(401).send({ message: "Unauthorized" })
     } catch (err) { console.log("Error in isAdminOrOwner", err); return res.status(500).send({ message: "Internal server error" }) }

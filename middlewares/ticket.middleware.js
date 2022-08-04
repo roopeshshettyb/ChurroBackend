@@ -19,6 +19,20 @@ const isAdminOrOwnerOrEngineerOfTicket = async (req, res, next) => {
     } catch (err) { console.log("Error in isAdminOrOwnerOrEngineerOfTicket", err); return res.status(500).send({ message: "Internal server error" }) }
 }
 
+const validateCreateTicketBody = async (req, res, next) => {
+    if (!req.body.title) return res.status(400).send({ message: "Title is not provided" })
+    if (!req.body.description) return res.status(400).send({ message: "Description was not provided" })
+    next()
+}
+
+const validateUpdateTicketReq = async (req, res, next) => {
+    try {
+        const ticket = await Ticket.findOne({ _id: req.params.id })
+        if (!ticket) return res.status(401).send({ message: "No ticket found" })
+        next()
+    } catch (err) { console.log("Error in validateUpdateTicketReq", err.message); return res.status(500).send({ message: "Internal server error" }) }
+}
+
 module.exports = {
-    isAdminOrOwnerOrEngineerOfTicket
+    isAdminOrOwnerOrEngineerOfTicket, validateCreateTicketBody, validateUpdateTicketReq
 }
