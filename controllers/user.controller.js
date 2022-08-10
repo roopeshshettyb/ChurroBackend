@@ -28,5 +28,5 @@ exports.update = async (req, res) => {
         const updatedUser = await user.save()
         updatedUser.password = ""
         return res.status(200).json((updatedUser));
-    } catch (err) { console.log("Error in update", err.message); return res.status(500).send({ message: "Internal server error" }) }
+    } catch (err) { console.log("Error in update", err.message); return res.status(500).send({ message: "Internal server error", err: err.message }) }
 }
