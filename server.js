@@ -9,10 +9,10 @@ const bcrypt = require('bcrypt')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-mongoose.connect(dbConfig.DATABASE)
-const db = mongoose.connection
-db.on('error', () => { console.log("Error while connecting to DB") })
-db.once('open', () => { console.log("Connected to DB") })
+// mongoose.connect(dbConfig.DATABASE)
+// const db = mongoose.connection
+// db.on('error', () => { console.log("Error while connecting to DB") })
+// db.once('open', () => { console.log("Connected to DB") })
 async function init() {
     try {
         const user = await User.create({
@@ -33,7 +33,7 @@ require('./routes/auth.route')(app)
 require('./routes/user.route')(app)
 require('./routes/ticket.route')(app)
 
-app.listen(serverConfig.PORT, () => {
+module.exports = app.listen(serverConfig.PORT, () => {
     console.log('Server is flying on PORT', serverConfig.PORT)
 })
 

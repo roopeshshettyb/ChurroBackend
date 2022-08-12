@@ -15,7 +15,9 @@ const verifyToken = (req, res, next) => {
 
 const isAdmin = async (req, res, next) => {
     const user = await User.findOne({ userId: req.userId })
-
+    const all = await User.find({})
+    console.log(all)
+    console.log(req.userId, user)
     if (user && user.userType === constants.userTypes.admin) next();
     else return res.status(403).send({ message: "Unauthorized, only Admins can access" })
 }
